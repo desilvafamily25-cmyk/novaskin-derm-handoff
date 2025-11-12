@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,7 +6,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const conditions = [
-  { name: "Acne", description: "Treatment for acne vulgaris, including topical and oral therapies" },
+  {
+    name: "Acne",
+    description: "Treatment for acne vulgaris, including topical and oral therapies",
+    fullText: `Acne vulgaris is one of the most common dermatological conditions, affecting teenagers and adults alike. It occurs when hair follicles become clogged with oil and dead skin cells, leading to blackheads, whiteheads, pimples, or cysts. Effective management begins with good skincare habits, including gentle cleansing and non-comedogenic products. Depending on severity, treatments may include topical retinoids, benzoyl peroxide, antibiotics, or hormonal therapies. Severe or resistant acne may require oral isotretinoin under specialist supervision. Early treatment helps prevent scarring and can significantly improve skin health, confidence, and overall quality of life.`,
+  },
   { name: "Rosacea", description: "Management of facial redness, flushing, and associated symptoms" },
   { name: "Eczema", description: "Treatment of atopic dermatitis and contact dermatitis" },
   { name: "Contact Dermatitis", description: "Diagnosis and management of allergic and irritant reactions" },
@@ -22,6 +27,8 @@ const conditions = [
 ];
 
 const Dermatology = () => {
+  const [expanded, setExpanded] = useState<number | null>(null);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -51,16 +58,26 @@ const Dermatology = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {conditions.map((condition, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+                <Card
+                  key={index}
+                  className="hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                  onClick={() => setExpanded(expanded === index ? null : index)}
+                >
                   <CardHeader>
                     <CardTitle className="text-lg text-sage-dark">
                       {condition.name}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-2">
                       {condition.description}
                     </p>
+
+                    {expanded === index && condition.fullText && (
+                      <p className="text-sm text-gray-700 mt-2 transition-all duration-300 ease-in-out">
+                        {condition.fullText}
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -137,7 +154,12 @@ const Dermatology = () => {
           <p className="text-lg text-foreground mb-8 max-w-2xl mx-auto">
             Book an appointment to discuss your dermatology concerns with Dr Premila Hewage
           </p>
-          <Button variant="default" size="lg" className="bg-charcoal text-white hover:bg-charcoal/90" asChild>
+          <Button
+            variant="default"
+            size="lg"
+            className="bg-charcoal text-white hover:bg-charcoal/90"
+            asChild
+          >
             <Link to="/contact">Book Consultation</Link>
           </Button>
         </div>
