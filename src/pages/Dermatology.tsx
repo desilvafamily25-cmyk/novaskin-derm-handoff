@@ -1,4 +1,9 @@
 import { useState } from "react";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, Search } from "lucide-react";
 
 const conditions = [
