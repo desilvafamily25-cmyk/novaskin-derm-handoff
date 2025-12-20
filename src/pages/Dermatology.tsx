@@ -43,7 +43,7 @@ Early treatment not only prevents scarring but also restores skin health, confid
     name: "Rosacea",
     description: "Management of facial redness, flushing, and associated symptoms",
     fullText: `
-Rosacea is a chronic inflammatory facial disorder with persistent erythema, flushing, telangiectasia and/or inflammatory papules–pustules. Consistent daily care and trigger control are key.
+Rosacea is a chronic inflammatory facial disorder with persistent erythema, flushing, telangiectasia and/or inflammatory papules–pustules. Consistent daily care plus trigger control are key.
 
 <strong>General measures & skincare</strong>  
 • Identify triggers (heat, sun, alcohol, spicy food, stress).  
