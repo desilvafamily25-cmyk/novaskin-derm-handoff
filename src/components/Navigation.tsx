@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,6 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { searchData, SearchItem } from "@/data/searchData";
 
 const Navigation = () => {
   const location = useLocation();
@@ -26,14 +27,17 @@ const Navigation = () => {
     { name: "Contact", path: "/contact" },
   ];
 
-  const searchItems = [
-    { name: "Home", path: "/", keywords: ["home", "welcome", "main"] },
-    { name: "Skin Cancer Checks", path: "/skin-checks", keywords: ["skin cancer", "mole", "melanoma", "check", "screening", "dermoscopy"] },
-    { name: "Dermatology", path: "/dermatology", keywords: ["dermatology", "skin conditions", "eczema", "psoriasis", "acne", "rash"] },
-    { name: "Skin Care", path: "/skin-care", keywords: ["skincare", "ingredients", "retinoid", "moisturizer", "sunscreen", "acid", "vitamin c", "niacinamide"] },
-    { name: "About Dr. Premila", path: "/about", keywords: ["about", "doctor", "dermatologist", "qualifications", "experience"] },
-    { name: "Contact & Booking", path: "/contact", keywords: ["contact", "book", "appointment", "phone", "email", "location"] },
-  ];
+  // Group search items by category
+  const groupedSearchItems = useMemo(() => {
+    const groups: Record<string, SearchItem[]> = {};
+    searchData.forEach((item) => {
+      if (!groups[item.category]) {
+        groups[item.category] = [];
+      }
+      groups[item.category].push(item);
+    });
+    return groups;
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -82,24 +86,28 @@ const Navigation = () => {
 
           {/* Search Dialog */}
           <CommandDialog open={searchOpen} onOpenChange={setSearchOpen}>
-            <CommandInput placeholder="Search pages, topics, ingredients..." />
-            <CommandList>
+            <CommandInput placeholder="Search conditions, treatments, ingredients..." />
+            <CommandList className="max-h-[400px]">
               <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading="Pages">
-                {searchItems.map((item) => (
-                  <CommandItem
-                    key={item.path}
-                    onSelect={() => {
-                      navigate(item.path);
-                      setSearchOpen(false);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <Search className="mr-2 h-4 w-4" />
-                    {item.name}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {Object.entries(groupedSearchItems).map(([category, items]) => (
+                <CommandGroup key={category} heading={category}>
+                  {items.map((item, idx) => (
+                    <CommandItem
+                      key={`${item.path}-${item.name}-${idx}`}
+                      value={`${item.name} ${item.keywords.join(" ")}`}
+                      onSelect={() => {
+                        navigate(item.path);
+                        setSearchOpen(false);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <Search className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <span>{item.name}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{item.category}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ))}
             </CommandList>
           </CommandDialog>
 
